@@ -377,6 +377,11 @@ class Selectors:
     FIELD_TRACKING_CARRIER_SELECTOR = [".tracking-event-carrier-header"]
     #: Matched case-insensitively and removed from the carrier header, e.g. "Shipped with UPS" -> "UPS".
     FIELD_TRACKING_CARRIER_REGEX = r"^(?:shipped with|delivered by|delivery (?:facilitated )?by|carrier:?)\s+"
+    #: The page's headline status: the delivery promise on the carrier layout, the current milestone on the
+    #: status-only layout, or the notice on the not-shipped layout.
+    FIELD_TRACKING_STATUS_SELECTOR = ["h1.pt-promise-main-slot",
+                                      "h1.pt-status-main-status",
+                                      ".a-alert-success h2"]
 
     #####################################
     # CSS selectors for Invoice fields

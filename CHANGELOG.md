@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased](https://github.com/alexdlaird/amazon-orders/compare/5.2.1...HEAD)
 
+### Added
+
+- `Tracking.status`, the tracking page's headline status as Amazon shows it, e.g. `Delivered January 9`, `Ordered`, or that the package has not shipped yet.
+
 ### Changed
 
 - The error `get_tracking()` and `parse_tracking()` raise on a page with no tracking card says so, instead of only that the HTML may have changed.

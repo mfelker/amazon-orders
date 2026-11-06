@@ -31,6 +31,11 @@ class Tracking(Parsable):
         #: The carrier's tracking number, e.g. ``1Z999AA10123456784`` or ``TBA000000000000``. Always a ``str``,
         #: since many (e.g. USPS) are all digits and may have leading zeros.
         self.tracking_number: Optional[str] = self.safe_parse(self._parse_tracking_number)
+        #: The page's headline status, as Amazon shows it, e.g. ``Delivered January 9``, ``Ordered``, or ``We will
+        #: email you as soon as this order ships.`` for a package that has not shipped yet. It tells that case apart
+        #: from a page that has carrier tracking, since both leave :attr:`carrier` and :attr:`tracking_number`
+        #: ``None`` when Amazon shows no carrier.
+        self.status: Optional[str] = self.safe_parse(self._parse_status)
 
     def __repr__(self) -> str:
         return f"<Tracking: \"{self.carrier} {self.tracking_number}\">"
@@ -48,6 +53,14 @@ class Tracking(Parsable):
         if prefix and prefix in value:
             value = value.split(prefix, 1)[1].strip()
         return value or None
+
+    def _parse_status(self) -> Optional[str]:
+        tag = util.select_one(self.parsed, self.config.selectors.FIELD_TRACKING_STATUS_SELECTOR)
+        if not tag:
+            return None
+
+        # The heading nests its date in a span on its own line, so collapse the whitespace
+        return " ".join(tag.get_text(" ").split()) or None
 
     def _parse_carrier(self) -> Optional[str]:
         value = self.simple_parse(self.config.selectors.FIELD_TRACKING_CARRIER_SELECTOR)

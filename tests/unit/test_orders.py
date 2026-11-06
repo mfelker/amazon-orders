@@ -2017,6 +2017,7 @@ class TestOrders(UnitTestCase):
                          resp.calls[0].request.url)
         self.assertEqual("UPS", tracking.carrier)
         self.assertEqual("1Z999AA10123456784", tracking.tracking_number)
+        self.assertEqual("Delivered January 9", tracking.status)
 
     @responses.activate
     def test_get_tracking_status_only(self):
@@ -2032,6 +2033,7 @@ class TestOrders(UnitTestCase):
         # THEN
         self.assertIsNone(tracking.carrier)
         self.assertIsNone(tracking.tracking_number)
+        self.assertEqual("Ordered", tracking.status)
 
     @responses.activate
     def test_get_tracking_not_shipped(self):
@@ -2047,6 +2049,7 @@ class TestOrders(UnitTestCase):
         # THEN
         self.assertIsNone(tracking.carrier)
         self.assertIsNone(tracking.tracking_number)
+        self.assertEqual("We will email you as soon as this order ships.", tracking.status)
         self.assertEqual([], tracking.parse_failures)
 
     @responses.activate

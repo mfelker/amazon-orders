@@ -23,6 +23,7 @@ class TestTracking(UnitTestCase):
         # THEN
         self.assertEqual("UPS", tracking.carrier)
         self.assertEqual("1Z999AA10123456784", tracking.tracking_number)
+        self.assertEqual("Delivered January 9", tracking.status)
 
     def test_parse_tracking_amazon_delivery(self):
         # WHEN
@@ -32,6 +33,7 @@ class TestTracking(UnitTestCase):
         # THEN
         self.assertEqual("Amazon", tracking.carrier)
         self.assertEqual("TBA000000000000", tracking.tracking_number)
+        self.assertEqual("Delivered January 9", tracking.status)
 
     def test_parse_tracking_status_only_page(self):
         # GIVEN
@@ -43,6 +45,7 @@ class TestTracking(UnitTestCase):
         # THEN
         self.assertIsNone(tracking.carrier)
         self.assertIsNone(tracking.tracking_number)
+        self.assertEqual("Ordered", tracking.status)
 
     def test_parse_tracking_not_shipped_page(self):
         # GIVEN
@@ -54,6 +57,7 @@ class TestTracking(UnitTestCase):
         # THEN
         self.assertIsNone(tracking.carrier)
         self.assertIsNone(tracking.tracking_number)
+        self.assertEqual("We will email you as soon as this order ships.", tracking.status)
         self.assertEqual([], tracking.parse_failures)
 
     def test_parse_tracking_unknown_container(self):
@@ -67,13 +71,15 @@ class TestTracking(UnitTestCase):
         # THEN
         self.assertIsNone(tracking.carrier)
         self.assertIsNone(tracking.tracking_number)
+        self.assertIsNone(tracking.status)
 
     def test_parse_tracking_to_dict(self):
         # WHEN
         tracking = AmazonOrders.parse_tracking(self.given_tracking_page("progress-tracker-ups.html"), self.test_config)
 
         # THEN
-        self.assertEqual({"carrier": "UPS", "tracking_number": "1Z999AA10123456784"}, tracking.to_dict())
+        self.assertEqual({"carrier": "UPS", "tracking_number": "1Z999AA10123456784", "status": "Delivered January 9"},
+                         tracking.to_dict())
 
     def test_tracking_number_all_digits_stays_text(self):
         # GIVEN
@@ -97,6 +103,7 @@ class TestTracking(UnitTestCase):
         # THEN
         self.assertIsNone(tracking.carrier)
         self.assertIsNone(tracking.tracking_number)
+        self.assertIsNone(tracking.status)
 
     def test_parse_tracking_not_a_tracking_page(self):
         # WHEN
