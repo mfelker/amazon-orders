@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- Structure of Amazon's package tracking page (/progress-tracker/package) for a package that has not shipped
+     yet, from https://github.com/alexdlaird/amazon-orders/issues/187: its cards sit in the top content, above a
+     main content that only holds related products. Trimmed to the containers the parser looks at. -->
+<html>
+<body>
+<div id="a-page">
+ <div id="pageContainer">
+  <div id="pageContainer-inner">
+   <div id="topContent-container">
+    <div id="heading-container">
+     <div class="a-alert-success">
+      <h2>
+       We will email you as soon as this order ships.
+      </h2>
+     </div>
+     <section class="pt-card">
+      <h2>
+       Delivery Info
+      </h2>
+     </section>
+    </div>
+    <section class="pt-card">
+     <h2>
+      Address info
+     </h2>
+    </section>
+   </div>
+   <section class="pt-card">
+    <h2>
+     Order Info
+    </h2>
+   </section>
+   <div id="mainContent-container">
+    <div id="split-container">
+     <h2>
+      Products related to items in your shipment
+     </h2>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+</body>
+</html>

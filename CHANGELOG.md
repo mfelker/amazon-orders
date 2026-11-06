@@ -6,6 +6,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased](https://github.com/alexdlaird/amazon-orders/compare/5.2.1...HEAD)
 
+### Changed
+
+- The error `get_tracking()` and `parse_tracking()` raise on a page with no tracking card says so, instead of only that the HTML may have changed.
+
+### Fixed
+
+- `get_tracking()` and `parse_tracking()` parse the tracking page of a package that has not shipped yet (its cards sit above the main content), and any other layout that has a tracking card, instead of raising.
+
 ## [5.2.1](https://github.com/alexdlaird/amazon-orders/compare/5.2.0...5.2.1) - 2026-10-31
 
 ### Added

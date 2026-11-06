@@ -362,11 +362,15 @@ class Selectors:
     # CSS selectors for Tracking fields
     #####################################
 
-    #: The package tracking page: the carrier layout (with a map), or the status-only layout (milestones only,
-    #: no carrier or tracking number)
+    #: The package tracking page: the carrier layout (with a map), the status-only layout (milestones only, no
+    #: carrier or tracking number), or the not-shipped layout (its cards sit above the main content, which only
+    #: holds related products). Any page with a tracking card is a tracking page, whatever Amazon wraps it in,
+    #: so the last selector catches a layout the others do not know.
     TRACKING_ENTITY_SELECTOR = ["div.pt-main-container",
                                 "#pt-page-container-inner",
-                                "#mainContent-container:has(section.pt-card)"]
+                                "#mainContent-container:has(section.pt-card)",
+                                "#pageContainer-inner:has(section.pt-card)",
+                                "body:has(section.pt-card)"]
     TRACKING_ERROR_SELECTOR = "div#errorPageContainer"
     FIELD_TRACKING_NUMBER_SELECTOR = [".pt-delivery-card-trackingId"]
     FIELD_TRACKING_NUMBER_PREFIX = "Tracking ID:"

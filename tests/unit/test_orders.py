@@ -2034,6 +2034,22 @@ class TestOrders(UnitTestCase):
         self.assertIsNone(tracking.tracking_number)
 
     @responses.activate
+    def test_get_tracking_not_shipped(self):
+        # GIVEN
+        self.amazon_session.is_authenticated = True
+        with open(os.path.join(self.RESOURCES_DIR, "tracking", "progress-tracker-not-shipped.html"), "r",
+                  encoding="utf-8") as f:
+            responses.add(responses.GET, self.test_config.constants.TRACKING_URL, body=f.read(), status=200)
+
+        # WHEN
+        tracking = self.amazon_orders.get_tracking("112-0000000-0000000", "AbCdEfGhI")
+
+        # THEN
+        self.assertIsNone(tracking.carrier)
+        self.assertIsNone(tracking.tracking_number)
+        self.assertEqual([], tracking.parse_failures)
+
+    @responses.activate
     def test_get_tracking_unavailable(self):
         # GIVEN
         self.amazon_session.is_authenticated = True

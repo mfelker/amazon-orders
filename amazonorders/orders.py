@@ -233,12 +233,13 @@ class AmazonOrders:
         :param html: The package tracking page HTML to parse.
         :param config: The config providing the selectors used for parsing.
         :return: The parsed Tracking. Its fields are ``None`` on a page that only shows the delivery
-            milestones (no carrier tracking).
+            milestones (no carrier tracking), or that says the package has not shipped yet.
         """
         parsed = BeautifulSoup(html, config.bs4_parser)
         tracking = cls._parse_tracking(parsed, config)
         if not tracking:
-            raise AmazonOrdersError("Could not parse package tracking. Check if Amazon changed the HTML.")
+            raise AmazonOrdersError("Could not parse package tracking, the page has no tracking card (it may not be a "
+                                    "package tracking page). Check if Amazon changed the HTML.")
         return tracking
 
     def get_tracking(self,
@@ -252,7 +253,7 @@ class AmazonOrders:
         :param shipment_id: The Shipment's :attr:`~amazonorders.entity.shipment.Shipment.shipment_id`.
             Amazon stops showing the tracking link it comes from on older Orders.
         :return: The requested Tracking. Its fields are ``None`` when the page only shows the delivery
-            milestones (no carrier tracking).
+            milestones (no carrier tracking), or says the package has not shipped yet.
         """
         if not self.amazon_session.is_authenticated:
             raise AmazonOrdersError("Call AmazonSession.login() to authenticate first.")
@@ -282,7 +283,7 @@ class AmazonOrders:
         tracking = self._parse_tracking(tracking_response.parsed, self.config)
         if not tracking:
             raise AmazonOrdersError(f"Could not parse package tracking for Shipment {shipment_id} of Order "
-                                    f"{order_id}. Check if Amazon changed the HTML.")
+                                    f"{order_id}, the page has no tracking card. Check if Amazon changed the HTML.")
         return tracking
 
     def get_family_members(self) -> List[FamilyMember]:

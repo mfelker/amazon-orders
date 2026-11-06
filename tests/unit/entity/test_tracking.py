@@ -44,6 +44,30 @@ class TestTracking(UnitTestCase):
         self.assertIsNone(tracking.carrier)
         self.assertIsNone(tracking.tracking_number)
 
+    def test_parse_tracking_not_shipped_page(self):
+        # GIVEN
+        html = self.given_tracking_page("progress-tracker-not-shipped.html")
+
+        # WHEN
+        tracking = AmazonOrders.parse_tracking(html, self.test_config)
+
+        # THEN
+        self.assertIsNone(tracking.carrier)
+        self.assertIsNone(tracking.tracking_number)
+        self.assertEqual([], tracking.parse_failures)
+
+    def test_parse_tracking_unknown_container(self):
+        # GIVEN
+        html = ("<html><body><div id=\"some-new-container\"><section class=\"pt-card\"><h2>Delivery Info</h2>"
+                "</section></div></body></html>")
+
+        # WHEN
+        tracking = AmazonOrders.parse_tracking(html, self.test_config)
+
+        # THEN
+        self.assertIsNone(tracking.carrier)
+        self.assertIsNone(tracking.tracking_number)
+
     def test_parse_tracking_to_dict(self):
         # WHEN
         tracking = AmazonOrders.parse_tracking(self.given_tracking_page("progress-tracker-ups.html"), self.test_config)
@@ -80,4 +104,5 @@ class TestTracking(UnitTestCase):
             AmazonOrders.parse_tracking("<html><body><p>Something else</p></body></html>", self.test_config)
 
         # THEN
-        self.assertIn("Could not parse package tracking", str(cm.exception))
+        self.assertEqual("Could not parse package tracking, the page has no tracking card (it may not be a package "
+                         "tracking page). Check if Amazon changed the HTML.", str(cm.exception))
